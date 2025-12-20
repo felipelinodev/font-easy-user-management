@@ -1,0 +1,13 @@
+{ 
+  "compilerOptions": { 
+  "target": "ES2020", // Define a versão/sintaxe do JavaScript que o TS vai gerar
+  "module": "NodeNext", // Define qual sistema de módulos o TS vai emitir (suporta top-level await)
+  "moduleResolution": "NodeNext", // Necessário quando usando module: NodeNext
+  "rootDir": "./src", // Define a raiz dos arquivos de entrada (input) do compilador
+  "outDir": "./dist", // Diretório onde o JS emitido pelo TS será gerado
+  "strict": true, // Ativa o conjunto completo de regras de verificação de tipos
+  "esModuleInterop": true, // Você usa assim: (import express from "express"  ) ao invés de assim: (import * as express from "express")
+  "skipLibCheck": true //“Não faça verificação de tipos (type-check) nos arquivos .d.ts que não são meus.”
+ },
+ "exclude": ["prisma", "prisma.config.ts", "prisma/migrations", "prisma/schema.prisma", "prisma/prisma.config.ts", "prisma/generated", "prisma/client", "prisma/client/extension.ts"]
+}
