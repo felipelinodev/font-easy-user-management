@@ -1,7 +1,8 @@
 import prisma from '../lib/prisma'
+import { compareHash } from '../services/security';
 
 
-type userData = {
+type UserData = {
   name: string;
   email: string;
   password: string;
@@ -9,8 +10,35 @@ type userData = {
   plan_type: string;
 }
 
-async function userCreate(data: userData){
+type LoginData = {
+  email: string;
+  password: string;
+}
+
+async function userCreate(data: UserData){
     return prisma.users.create({data})
+}
+
+async function userLogin(data: LoginData) {
+   const {email, password} = data;
+
+   const user = await prisma.users.findUnique({
+    where: { email }
+   }) 
+
+   if(!user){
+    return null
+   }
+
+   const isValidPassword = await compareHash(password, user.password)
+
+   if (!isValidPassword) {
+     return null;
+   }
+
+   const { password: _, ...userWithoutPassword }  = user;
+
+   return userWithoutPassword;
 }
 
 async function userDelete(id: number){
@@ -21,7 +49,9 @@ async function userDelete(id: number){
   })
 }
 
+
 export {
     userCreate,
-    userDelete
+    userDelete,
+    userLogin,
 }

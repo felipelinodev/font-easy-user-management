@@ -1,19 +1,44 @@
 import { Request, Response } from "express";
-import { userCreate, userDelete } from "../database/UserDao";
+import { userCreate, userDelete, userLogin } from "../database/UserDao";
 import { z } from "zod";
-import { userSchemaZod } from "../schemas/UserSchema";
+import { loginSchemaZod, userSchemaZod } from "../schemas/UserSchema";
+import { generateHash } from "../services/security";
+import { generateToken } from "../services/auth";
 
-async function userControllerCreate(req: Request, res: Response){
+async function userControllerCreate(req: Request, res: Response){    
     const user = userSchemaZod.safeParse(req.body)
 
     if(!user.success){
         return res.status(400).json({erros: z.flattenError(user.error)})
     }
 
+    user.data.password = await generateHash(user.data.password)
+
     await userCreate(user.data)
 
-    res.status(201).json({message: "usuario criado com sucesso!", user})
+    res.status(201).json({message: "usuario criado com sucesso!", user })
 }
+
+
+async function userControllerLogin(req: Request, res: Response){
+    const user = loginSchemaZod.safeParse(req.body);
+
+    if(!user.success){
+        return res.status(400).json({erros: z.flattenError(user.error)})
+    }
+
+    const loginData = await userLogin(user.data)
+
+    if(!loginData){
+        return res.status(401).json({error: 'Credenciais inválidas.'})
+    }
+    const tokenAuth = generateToken(loginData.id)
+
+    res.status(200).json({message: "Login realizado com sucesso.", tokenAuth})
+}
+
+
+
 
 
 async function userControllerDelete(req: Request, res: Response){
@@ -28,5 +53,6 @@ async function userControllerDelete(req: Request, res: Response){
 
 export{
     userControllerDelete,
-    userControllerCreate
+    userControllerCreate,
+    userControllerLogin
 }
