@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { userCreate, userDelete, userLogin } from "../database/UserDao";
+import { userCreate, userDelete, userGetById, userLogin, userUpdate } from "../database/UserDao";
 import { z } from "zod";
 import { loginSchemaZod, userSchemaZod } from "../schemas/UserSchema";
 import { generateHash } from "../services/security";
@@ -39,6 +39,31 @@ async function userControllerLogin(req: Request, res: Response){
 
 
 
+async function userControllerProfile(req: Request, res: Response){
+    const { userId } = req.body.user;
+    const user = await userGetById(userId);
+
+    if(!user){
+        return res.status(404).json({error: "usuário não encontrado."})
+    }
+
+    res.status(200).json({user})
+}
+
+
+async function userControllerUpdate(req: Request, res: Response) {
+    const {userId} = req.body.user;
+    const { user, ...dataUpdate } = req.body; 
+
+    try {
+        const updated = await userUpdate(userId, dataUpdate);
+        res.status(200).json({message: "Usuário atualizado com sucesso.", data: updated});
+    } catch (error) {
+        return res.status(404).json({error: "usuario não encontrado ou token invalido."}) 
+    }
+
+}
+
 
 
 async function userControllerDelete(req: Request, res: Response){
@@ -54,5 +79,7 @@ async function userControllerDelete(req: Request, res: Response){
 export{
     userControllerDelete,
     userControllerCreate,
-    userControllerLogin
+    userControllerLogin,
+    userControllerProfile,
+    userControllerUpdate
 }
