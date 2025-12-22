@@ -20,7 +20,7 @@ model favoritefonts {
 model fontlinks {
   id_link       Int            @id @default(autoincrement())
   font_link     String
-  font_id       Int?
+  font_id       Int
   favoritefonts favoritefonts? @relation(fields: [font_id], references: [id_font], onDelete: Cascade, onUpdate: NoAction)
 }
 
