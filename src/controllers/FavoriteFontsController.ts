@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { z } from "zod";
 import { fontSchemaZod } from "../schemas/FavoriteFontsSchema";
-import { favoriteFontsCreate } from "../database/FavoriteFontsDao";
+import { favoriteFontsCreate, GetAllfavoriteFontsByUser } from "../database/FavoriteFontsDao";
 
 async function fontsControllerCreate(req: Request, res: Response){
     const font = fontSchemaZod.safeParse(req.body)
@@ -20,4 +20,20 @@ async function fontsControllerCreate(req: Request, res: Response){
     return res.status(201).json({ message: "font adicionada sucesso!", font})
 }
 
-export {fontsControllerCreate}
+
+async function getAllFavoriteFonts(req: Request, res: Response){
+
+    const userId = (req as any).user.id
+
+    const all_fonts = await GetAllfavoriteFontsByUser(userId)
+
+    return res.status(200).json(all_fonts)
+
+    
+}
+
+
+export {
+    fontsControllerCreate,
+    getAllFavoriteFonts
+}
