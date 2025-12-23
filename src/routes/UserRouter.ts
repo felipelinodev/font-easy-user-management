@@ -1,7 +1,7 @@
 import express from "express";
 import { userControllerCreate, userControllerDelete, userControllerLogin, userControllerProfile, userControllerUpdate } from "../controllers/UserController";
 import { authMiddleware } from "../midderares/authMiddleware";
-import { fontsControllerCreate, getAllFavoriteFontsController } from "../controllers/FavoriteFontsController";
+import { favoriteFontsControllerDelete, fontsControllerCreate, getAllFavoriteFontsController } from "../controllers/FavoriteFontsController";
 
 const router = express.Router();
 
@@ -21,7 +21,7 @@ router.post('/favoritefonts', authMiddleware, fontsControllerCreate);
 
 router.get('/favoritefonts', authMiddleware, getAllFavoriteFontsController);
 
-//router.get('/font_links')
+router.delete('/favoritefonts/:id', authMiddleware, favoriteFontsControllerDelete)
 
 
 export default router;

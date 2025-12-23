@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { z } from "zod";
 import { fontSchemaZod } from "../schemas/FavoriteFontsSchema";
-import { favoriteFontsCreate, GetAllfavoriteFontsByUser } from "../database/FavoriteFontsDao";
+import { favoriteFontsCreate, favoritefontsDelete, GetAllfavoriteFontsByUser } from "../database/FavoriteFontsDao";
 
 async function fontsControllerCreate(req: Request, res: Response){
     const font = fontSchemaZod.safeParse(req.body)
@@ -33,7 +33,21 @@ async function getAllFavoriteFontsController(req: Request, res: Response){
 }
 
 
+async function favoriteFontsControllerDelete(req: Request, res: Response){
+    const idFont = Number(req.params.id)
+    
+    if(isNaN(idFont)){
+        return res.status(400).json({error: "ID inválido"})
+    }
+
+    await favoritefontsDelete(idFont)
+
+    return res.status(200).json({message: "font deletada com sucesso."})
+}
+
+
 export {
     fontsControllerCreate,
-    getAllFavoriteFontsController
+    getAllFavoriteFontsController,
+    favoriteFontsControllerDelete
 }
