@@ -21,7 +21,7 @@ async function fontsControllerCreate(req: Request, res: Response){
 }
 
 
-async function getAllFavoriteFonts(req: Request, res: Response){
+async function getAllFavoriteFontsController(req: Request, res: Response){
 
     const userId = (req as any).user.id
 
@@ -35,5 +35,5 @@ async function getAllFavoriteFonts(req: Request, res: Response){
 
 export {
     fontsControllerCreate,
-    getAllFavoriteFonts
+    getAllFavoriteFontsController
 }
