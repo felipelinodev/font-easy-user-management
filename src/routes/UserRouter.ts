@@ -1,11 +1,15 @@
 import express from "express";
-import { userControllerCreate, userControllerDelete, userControllerLogin, userControllerProfile, userControllerUpdate } from "../controllers/UserController";
+import { userControllerCreate, userControllerDelete, userControllerLogin, userControllerProfile, userControllerUpdate, userGoogleControllerCreate, userGoogleControllerLogin } from "../controllers/UserController";
 import { authMiddleware } from "../midderares/authMiddleware";
 import { favoriteFontsControllerDelete, fontsControllerCreate, getAllFavoriteFontsController } from "../controllers/FavoriteFontsController";
 
 const router = express.Router();
 
 router.post("/users", userControllerCreate);
+
+router.post("/auth/google", userGoogleControllerCreate)
+
+router.post("/auth/google/login", userGoogleControllerLogin)
 
 router.delete("/users/:id", authMiddleware,  userControllerDelete);
 

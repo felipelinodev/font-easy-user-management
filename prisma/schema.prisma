@@ -28,7 +28,8 @@ model users {
   id            Int             @id @default(autoincrement())
   name          String?         @db.VarChar(100)
   email         String          @unique
-  password      String
+  password      String?
+  google_id     String?         @unique  
   photo         String?
   plan_type     String?         @db.VarChar(100)
   favoritefonts favoritefonts[]

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { userCreate, userDelete, userGetById, userLogin, userUpdate } from "../database/UserDao";
+import { userCreate, userDelete, userGetById, userLogin, userUpdate, userGoogleLogin, userGoogleCreate } from "../database/UserDao";
 import { z } from "zod";
-import { loginSchemaZod, userSchemaZod } from "../schemas/UserSchema";
+import { loginSchemaZod, userGoogleSchemaZod, userSchemaZod } from "../schemas/UserSchema";
 import { generateHash } from "../services/security";
 import { generateToken } from "../services/auth";
 
@@ -19,6 +19,37 @@ async function userControllerCreate(req: Request, res: Response){
     res.status(201).json({message: "usuario criado com sucesso!", user })
 }
 
+async function userGoogleControllerCreate(req: Request, res: Response){
+    const googleUser = userGoogleSchemaZod.safeParse(req.body);
+
+    if(!googleUser.success){
+        return res.status(400).json({erros: z.flattenError(googleUser.error)})
+    }
+
+    await userGoogleCreate(googleUser.data);
+
+    res.status(201).json({message: "usuario criado com sucesso!", googleUser })
+}
+
+async function userGoogleControllerLogin(req: Request, res: Response) {
+    const {google_id} = req.body;
+
+    if(!google_id){
+        return res.status(400).json({ errors: 'google_id é obrigatório' })
+    }
+
+
+    const userGoogle = await userGoogleLogin(google_id);
+
+    if(!userGoogle){
+        return res.status(401).json({ error: 'Usuário não encontrado' });
+    }
+
+    const tokenAuth = generateToken(userGoogle.id)
+
+    res.status(200).json({message: "Login realizado com sucesso.", tokenAuth})
+
+}
 
 async function userControllerLogin(req: Request, res: Response){
     const user = loginSchemaZod.safeParse(req.body);
@@ -81,5 +112,7 @@ export{
     userControllerCreate,
     userControllerLogin,
     userControllerProfile,
-    userControllerUpdate
+    userControllerUpdate,
+    userGoogleControllerCreate,
+    userGoogleControllerLogin
 }

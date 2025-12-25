@@ -2,13 +2,20 @@ import prisma from '../lib/prisma'
 import { compareHash } from '../services/security';
 
 
+
 type UserData = {
   name: string;
   email: string;
-  password: string;
-  photo: string;
+  password?: string;
+  photo?: string;
   plan_type: string;
 }
+
+
+type UserDataGoogle = UserData & {
+  google_id: string;
+}
+
 
 type UserDataUpdate = {
   name?: string | null;
@@ -28,6 +35,17 @@ async function userCreate(data: UserData){
     return prisma.users.create({data})
 }
 
+async function userGoogleCreate(data: UserDataGoogle) {
+   return prisma.users.create({data})
+}
+
+async function userGoogleLogin(google_id: string){
+   return prisma.users.findUnique({
+     where: {google_id}
+   })
+
+}
+
 async function userLogin(data: LoginData) {
    const {email, password} = data;
 
@@ -38,12 +56,17 @@ async function userLogin(data: LoginData) {
    if(!user){
     return null
    }
+   
+   if(!user.password){
+    return null
+   }
 
    const isValidPassword = await compareHash(password, user.password)
 
    if (!isValidPassword) {
      return null;
    }
+
 
    const { password: _, ...userWithoutPassword }  = user;
 
@@ -78,8 +101,10 @@ async function userDelete(id: number){
 
 export {
     userCreate,
+    userGoogleCreate,
     userDelete,
     userLogin,
     userGetById,
-    userUpdate
+    userUpdate,
+    userGoogleLogin
 }

@@ -15,4 +15,14 @@ const userSchemaZod = z.object({
     plan_type: z.string().optional().default("FREE")
 })
 
-export { userSchemaZod, loginSchemaZod }
+
+const userGoogleSchemaZod = z.object({
+    name: z.string().min(1, "É necessário adicionar um nome."),
+    email: z.email("Email inválido."),
+    password: z.string().optional(),
+    google_id: z.string('Id inválido.'),
+    photo: z.url().optional(),
+    plan_type: z.string().optional().default("FREE")
+})
+
+export { userSchemaZod, loginSchemaZod, userGoogleSchemaZod }
