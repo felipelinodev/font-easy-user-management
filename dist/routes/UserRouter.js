@@ -1,0 +1,21 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const UserController_1 = require("../controllers/UserController");
+const authMiddleware_1 = require("../midderares/authMiddleware");
+const FavoriteFontsController_1 = require("../controllers/FavoriteFontsController");
+const router = express_1.default.Router();
+router.post("/users", UserController_1.userControllerCreate);
+router.post("/auth/google", UserController_1.userGoogleControllerCreate);
+router.post("/auth/google/login", UserController_1.userGoogleControllerLogin);
+router.delete("/users/:id", authMiddleware_1.authMiddleware, UserController_1.userControllerDelete);
+router.put("/users", authMiddleware_1.authMiddleware, UserController_1.userControllerUpdate);
+router.post('/login', UserController_1.userControllerLogin);
+router.get('/profile', authMiddleware_1.authMiddleware, UserController_1.userControllerProfile);
+router.post('/favoritefonts', authMiddleware_1.authMiddleware, FavoriteFontsController_1.fontsControllerCreate);
+router.get('/favoritefonts', authMiddleware_1.authMiddleware, FavoriteFontsController_1.getAllFavoriteFontsController);
+router.delete('/favoritefonts/:id', authMiddleware_1.authMiddleware, FavoriteFontsController_1.favoriteFontsControllerDelete);
+exports.default = router;

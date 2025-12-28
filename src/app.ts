@@ -16,8 +16,5 @@ app.use(cors({
 
 app.use(router);
 
-app.listen(port, () => {
-  console.log(`App rodando na porta: ${port}\n Acesse: http://localhost:5000
-`);
-});
+export default app;
 
