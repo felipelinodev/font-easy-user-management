@@ -55,7 +55,6 @@ async function userGoogleControllerLogin(req: Request, res: Response) {
         sameSite: isProd ? 'none' : 'lax',
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 dias
         path: '/',
-        domain: isProd ? process.env.DOMAIN : 'localhost'
     })
 
     res.status(200).json({message: "Login realizado com sucesso."})
@@ -85,7 +84,6 @@ async function userControllerLogin(req: Request, res: Response){
         sameSite: isProd ? 'none' : 'lax',
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 dias
         path: '/',
-        domain: isProd ? process.env.DOMAIN : 'localhost'
     })
 
 

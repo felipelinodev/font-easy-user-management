@@ -36,7 +36,16 @@ async function userCreate(data: UserData){
 }
 
 async function userGoogleCreate(data: UserDataGoogle) {
-   return prisma.users.create({data})
+   return prisma.users.upsert({
+     where: { email: data.email },
+     update: {
+       // Atualiza dados do Google se o usuário já existir
+       google_id: data.google_id,
+       name: data.name,
+       photo: data.photo
+     },
+     create: data
+   })
 }
 
 async function userGoogleLogin(google_id: string){
