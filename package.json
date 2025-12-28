@@ -2,6 +2,7 @@
   "name": "font-easy-backend",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "tsx watch src/app.ts",
     "build": "prisma generate && tsc",
