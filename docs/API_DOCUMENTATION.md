@@ -1,8 +1,8 @@
 # Font Easy - API Documentation
 
-**Versão:** 1.0.0  
+**Versão:** 1.1.0  
 **Base URL:** `http://localhost:3000`  
-**Última atualização:** 23/12/2024
+**Última atualização:** 25/12/2024
 
 ---
 
@@ -10,10 +10,11 @@
 
 1. [Autenticação](#autenticação)
 2. [Endpoints de Usuários](#endpoints-de-usuários)
-3. [Endpoints de Fontes Favoritas](#endpoints-de-fontes-favoritas)
-4. [Schemas de Validação](#schemas-de-validação)
-5. [Modelos do Banco de Dados](#modelos-do-banco-de-dados)
-6. [Códigos de Erro](#códigos-de-erro)
+3. [Endpoints de Google OAuth](#endpoints-de-google-oauth)
+4. [Endpoints de Fontes Favoritas](#endpoints-de-fontes-favoritas)
+5. [Schemas de Validação](#schemas-de-validação)
+6. [Modelos do Banco de Dados](#modelos-do-banco-de-dados)
+7. [Códigos de Erro](#códigos-de-erro)
 
 ---
 
@@ -163,6 +164,65 @@ Authorization: Bearer <token>
 
 ---
 
+## Endpoints de Google OAuth
+
+### 1. Registrar Usuário Google
+
+| Método | Endpoint | Autenticação |
+|--------|----------|--------------|
+| `POST` | `/auth/google` | ❌ Não |
+
+**Request Body:**
+```json
+{
+  "name": "string (obrigatório, min: 1 caractere)",
+  "email": "string (obrigatório, email válido)",
+  "google_id": "string (obrigatório, ID do Google)",
+  "photo": "string (opcional, URL)",
+  "plan_type": "string (opcional, default: 'FREE')"
+}
+```
+
+**Response (201):**
+```json
+{
+  "message": "usuario criado com sucesso!",
+  "googleUser": { ... }
+}
+```
+
+**Erros:**
+- `400` - Dados inválidos
+
+---
+
+### 2. Login com Google
+
+| Método | Endpoint | Autenticação |
+|--------|----------|--------------|
+| `POST` | `/auth/google/login` | ❌ Não |
+
+**Request Body:**
+```json
+{
+  "google_id": "string (obrigatório)"
+}
+```
+
+**Response (200):**
+```json
+{
+  "message": "Login realizado com sucesso.",
+  "tokenAuth": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+**Erros:**
+- `400` - google_id é obrigatório
+- `401` - Usuário não encontrado
+
+---
+
 ## Endpoints de Fontes Favoritas
 
 ### 1. Adicionar Fonte Favorita
@@ -266,6 +326,15 @@ Authorization: Bearer <token>
 | email | string | ✅ | formato de email |
 | password | string | ✅ | - |
 
+### GoogleUserSchema
+| Campo | Tipo | Obrigatório | Validação |
+|-------|------|-------------|-----------|
+| name | string | ✅ | min: 1 caractere |
+| email | string | ✅ | formato de email |
+| google_id | string | ✅ | - |
+| photo | string | ❌ | URL válida |
+| plan_type | string | ❌ | default: "FREE" |
+
 ### FontSchema
 | Campo | Tipo | Obrigatório | Validação |
 |-------|------|-------------|-----------|
@@ -287,7 +356,8 @@ Authorization: Bearer <token>
 │ id          │ Int          │ PK, Auto    │
 │ name        │ String(100)  │ Nullable    │
 │ email       │ String       │ Unique      │
-│ password    │ String       │ Required    │
+│ password    │ String       │ Nullable    │
+│ google_id   │ String       │ Unique, Nullable │
 │ photo       │ String       │ Nullable    │
 │ plan_type   │ String(100)  │ Nullable    │
 └─────────────┴──────────────┴─────────────┘
