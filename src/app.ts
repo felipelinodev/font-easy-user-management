@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from "express";
 import router from "./routes/UserRouter.js";
 import cookieParser from 'cookie-parser';

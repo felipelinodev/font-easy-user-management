@@ -41,12 +41,11 @@ async function userGoogleControllerLogin(req, res) {
     const tokenAuth = (0, auth_1.generateToken)(userGoogle.id);
     const isProd = process.env.NODE_ENV === 'production';
     res.cookie('font-easy-auth', tokenAuth, {
-        httpOnly: true, //Esse cookie não vai ser acessivel do lado do cliente.
-        secure: isProd, // Em produção é true com https
-        sameSite: isProd ? 'none' : 'lax',
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 dias
+        httpOnly: true,
+        secure: isProd,
+        sameSite: (isProd ? 'none' : 'lax'),
+        maxAge: 7 * 24 * 60 * 60 * 1000,
         path: '/',
-        domain: isProd ? process.env.DOMAIN : 'localhost'
     });
     res.status(200).json({ message: "Login realizado com sucesso." });
 }
@@ -61,14 +60,14 @@ async function userControllerLogin(req, res) {
     }
     const tokenAuth = (0, auth_1.generateToken)(loginData.id);
     const isProd = process.env.NODE_ENV === 'production';
-    res.cookie('font-easy-auth', tokenAuth, {
-        httpOnly: true, //Esse cookie não vai ser acessivel do lado do cliente.
-        secure: isProd, // Em produção é true com https
-        sameSite: isProd ? 'none' : 'lax',
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 dias
+    const cookieOptions = {
+        httpOnly: true,
+        secure: isProd, // true in production, false in dev
+        sameSite: (isProd ? 'none' : 'lax'), // none in prod (cross-site), lax in dev (same-site/localhost)
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         path: '/',
-        domain: isProd ? process.env.DOMAIN : 'localhost'
-    });
+    };
+    res.cookie('font-easy-auth', tokenAuth, cookieOptions);
     res.status(200).json({ message: "Login realizado com sucesso." });
 }
 async function userControllerProfile(req, res) {

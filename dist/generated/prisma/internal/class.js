@@ -51,7 +51,7 @@ const config = {
     "clientVersion": "7.2.0",
     "engineVersion": "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3",
     "activeProvider": "postgresql",
-    "inlineSchema": "generator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel favoritefonts {\n  id_font         Int         @id @default(autoincrement())\n  user_id         Int\n  font_name       String      @db.VarChar(100)\n  font_variations Int?\n  font_type       String?\n  users           users       @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)\n  fontlinks       fontlinks[]\n}\n\nmodel fontlinks {\n  id_link       Int            @id @default(autoincrement())\n  font_link     String\n  font_id       Int\n  favoritefonts favoritefonts? @relation(fields: [font_id], references: [id_font], onDelete: Cascade, onUpdate: NoAction)\n}\n\nmodel users {\n  id            Int             @id @default(autoincrement())\n  name          String?         @db.VarChar(100)\n  email         String          @unique\n  password      String?\n  google_id     String?         @unique\n  photo         String?\n  plan_type     String?         @db.VarChar(100)\n  favoritefonts favoritefonts[]\n}\n",
+    "inlineSchema": "generator client {\n  provider     = \"prisma-client\"\n  output       = \"../src/generated/prisma\"\n  moduleFormat = \"cjs\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel favoritefonts {\n  id_font         Int         @id @default(autoincrement())\n  user_id         Int\n  font_name       String      @db.VarChar(100)\n  font_variations Int?\n  font_type       String?\n  users           users       @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)\n  fontlinks       fontlinks[]\n}\n\nmodel fontlinks {\n  id_link       Int            @id @default(autoincrement())\n  font_link     String\n  font_id       Int\n  favoritefonts favoritefonts? @relation(fields: [font_id], references: [id_font], onDelete: Cascade, onUpdate: NoAction)\n}\n\nmodel users {\n  id            Int             @id @default(autoincrement())\n  name          String?         @db.VarChar(100)\n  email         String          @unique\n  password      String?\n  google_id     String?         @unique\n  photo         String?\n  plan_type     String?         @db.VarChar(100)\n  favoritefonts favoritefonts[]\n}\n",
     "runtimeDataModel": {
         "models": {},
         "enums": {},
@@ -65,9 +65,9 @@ async function decodeBase64AsWasm(wasmBase64) {
     return new WebAssembly.Module(wasmArray);
 }
 config.compilerWasm = {
-    getRuntime: async () => await import("@prisma/client/runtime/query_compiler_bg.postgresql.mjs"),
+    getRuntime: async () => await import("@prisma/client/runtime/query_compiler_bg.postgresql.js"),
     getQueryCompilerWasmModule: async () => {
-        const { wasm } = await import("@prisma/client/runtime/query_compiler_bg.postgresql.wasm-base64.mjs");
+        const { wasm } = await import("@prisma/client/runtime/query_compiler_bg.postgresql.wasm-base64.js");
         return await decodeBase64AsWasm(wasm);
     }
 };

@@ -4,6 +4,7 @@ import { z } from "zod";
 import { loginSchemaZod, userGoogleSchemaZod, userSchemaZod } from "../schemas/UserSchema";
 import { generateHash } from "../services/security";
 import { generateToken } from "../services/auth";
+import 'dotenv/config';
 
 async function userControllerCreate(req: Request, res: Response){    
     const user = userSchemaZod.safeParse(req.body)
@@ -48,11 +49,13 @@ async function userGoogleControllerLogin(req: Request, res: Response) {
     const tokenAuth = generateToken(userGoogle.id)
 
 
+    const isProd = process.env.NODE_ENV === 'production';
+
     res.cookie('font-easy-auth', tokenAuth, {
-        httpOnly: true, //Esse cookie não vai ser acessivel do lado do cliente.
-        secure: true, // Em produção é true com https
-        sameSite: 'none',
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 dias
+        httpOnly: true, 
+        secure: isProd, 
+        sameSite: (isProd ? 'none' : 'lax') as 'none' | 'lax',
+        maxAge: 7 * 24 * 60 * 60 * 1000, 
         path: '/',
     })
 
@@ -76,15 +79,16 @@ async function userControllerLogin(req: Request, res: Response){
     const tokenAuth = generateToken(loginData.id)
 
     
-    const isProd = process.env.NODE_ENV === 'production'
+    const isProd = process.env.NODE_ENV === 'production';
 
     res.cookie('font-easy-auth', tokenAuth, {
-        httpOnly: true, //Esse cookie não vai ser acessivel do lado do cliente.
-        secure: isProd, // Em produção é true com https
-        sameSite: isProd ? 'none' : 'lax',
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 dias
+        httpOnly: true, 
+        secure: isProd, 
+        sameSite: (isProd ? 'none' : 'lax') as 'none' | 'lax',
+        maxAge: 7 * 24 * 60 * 60 * 1000, 
         path: '/',
     })
+
 
 
     res.status(200).json({message: "Login realizado com sucesso."})
