@@ -50,10 +50,10 @@ async function userGoogleControllerLogin(req: Request, res: Response) {
 
 
     res.cookie('font-easy-auth', tokenAuth, {
-        httpOnly: true, 
-        secure: true, 
-        sameSite: 'none',
-        maxAge: 7 * 24 * 60 * 60 * 1000, 
+        httpOnly: true,
+        secure: false, // ⚠️ EM PRODUÇÃO: secure: true (HTTPS obrigatório)
+        sameSite: 'lax', // ⚠️ EM PRODUÇÃO: 'none' (front e back em domínios diferentes)
+        maxAge: 7 * 24 * 60 * 60 * 1000,
         path: '/',
     })
 
@@ -78,12 +78,12 @@ async function userControllerLogin(req: Request, res: Response){
 
    
     res.cookie('font-easy-auth', tokenAuth, {
-        httpOnly: true, 
-        secure: true, 
-        sameSite: 'none',
-        maxAge: 7 * 24 * 60 * 60 * 1000, 
+        httpOnly: true,
+        secure: false, // ⚠️ DEV (localhost). EM PRODUÇÃO: secure: true (HTTPS obrigatório)
+        sameSite: 'lax', // ⚠️ DEV. EM PRODUÇÃO: 'none' (front e back em domínios diferentes)
+        maxAge: 7 * 24 * 60 * 60 * 1000,
         path: '/',
-    })
+        })
 
     res.status(200).json({message: "Login realizado com sucesso."})
 }
