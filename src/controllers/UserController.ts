@@ -49,10 +49,12 @@ async function userGoogleControllerLogin(req: Request, res: Response) {
     const tokenAuth = generateToken(userGoogle.id)
 
 
+    const isProduction = process.env.NODE_ENV === 'production';
+
     res.cookie('font-easy-auth', tokenAuth, {
         httpOnly: true,
-        secure: true, // ⚠️ EM PRODUÇÃO: secure: true (HTTPS obrigatório)
-        sameSite: 'none', // ⚠️ EM PRODUÇÃO: 'none' (front e back em domínios diferentes)
+        secure: isProduction, // secure: true apenas em produção
+        sameSite: isProduction ? 'none' : 'lax', // 'none' em prod, 'lax' em dev para facilitar
         maxAge: 7 * 24 * 60 * 60 * 1000,
         path: '/',
     })
@@ -78,10 +80,13 @@ async function userControllerLogin(req: Request, res: Response){
 
    
    
+    // Nota: Reutilize a variável isProduction ou defina novamente se não estiver no escopo (aqui defino novamente para garantir)
+    const isProduction = process.env.NODE_ENV === 'production';
+    
     res.cookie('font-easy-auth', tokenAuth, {
         httpOnly: true,
-        secure: true, // ⚠️ EM PRODUÇÃO: secure: true (HTTPS obrigatório)
-        sameSite: 'none', // ⚠️ EM PRODUÇÃO: 'none' (front e back em domínios diferentes)
+        secure: isProduction,
+        sameSite: isProduction ? 'none' : 'lax',
         maxAge: 7 * 24 * 60 * 60 * 1000,
         path: '/',
     })
@@ -93,7 +98,7 @@ async function userControllerLogin(req: Request, res: Response){
 
 
 async function userControllerProfile(req: Request, res: Response){
-    const { userId } = req.body.user;
+    const { userId } = (req as any).user;
     const user = await userGetById(userId);
 
     if(!user){
@@ -105,7 +110,7 @@ async function userControllerProfile(req: Request, res: Response){
 
 
 async function userControllerUpdate(req: Request, res: Response) {
-    const {userId} = req.body.user;
+    const {userId} = (req as any).user;
     const { user, ...dataUpdate } = req.body; 
 
     try {
