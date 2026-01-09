@@ -49,18 +49,7 @@ async function userGoogleControllerLogin(req: Request, res: Response) {
     const tokenAuth = generateToken(userGoogle.id)
 
 
-    const isProduction = process.env.NODE_ENV === 'production';
-
-    res.cookie('font-easy-auth', tokenAuth, {
-        httpOnly: true,
-        secure: isProduction, // secure: true apenas em produção
-        sameSite: isProduction ? 'none' : 'lax', // 'none' em prod, 'lax' em dev para facilitar
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-        path: '/',
-    })
-
-
-    res.status(200).json({message: "Login realizado com sucesso."})
+    res.status(200).json({message: "Login realizado com sucesso.", tokenAuth})
 
 }
 
@@ -79,20 +68,7 @@ async function userControllerLogin(req: Request, res: Response){
     const tokenAuth = generateToken(loginData.id)
 
    
-   
-    // Nota: Reutilize a variável isProduction ou defina novamente se não estiver no escopo (aqui defino novamente para garantir)
-    const isProduction = process.env.NODE_ENV === 'production';
-    
-    res.cookie('font-easy-auth', tokenAuth, {
-        httpOnly: true,
-        secure: isProduction,
-        sameSite: isProduction ? 'none' : 'lax',
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-        path: '/',
-    })
-
-
-    res.status(200).json({message: "Login realizado com sucesso."})
+     res.status(200).json({message: "Login realizado com sucesso.", tokenAuth})
 }
 
 
