@@ -10,7 +10,7 @@ async function fontsControllerCreate(req: Request, res: Response){
         return res.status(400).json({errors : z.flattenError(font.error)})
     }
 
-    const userId = (req as any).user.id
+    const userId = (req as any).user.userId
 
     await favoriteFontsCreate({
         ...font.data,
@@ -23,7 +23,7 @@ async function fontsControllerCreate(req: Request, res: Response){
 
 async function getAllFavoriteFontsController(req: Request, res: Response){
 
-    const userId = (req as any).user.id
+    const userId = (req as any).user.userId
 
     const all_fonts = await GetAllfavoriteFontsByUser(userId)
 
