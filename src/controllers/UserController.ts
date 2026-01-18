@@ -47,7 +47,7 @@ async function userGoogleControllerLogin(req: Request, res: Response) {
     }
 
     const tokenAuth = generateToken(userGoogle.id)
-
+    console.log(tokenAuth)
 
     res.status(200).json({message: "Login realizado com sucesso.", tokenAuth})
 
