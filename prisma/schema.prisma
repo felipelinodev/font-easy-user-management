@@ -32,6 +32,8 @@ model users {
   password      String?
   google_id     String?         @unique  
   photo         String?
-  plan_type     String?         @db.VarChar(100)
-  favoritefonts favoritefonts[]
+  plan_type            String?         @db.VarChar(100)
+  reset_token          String?
+  reset_token_expires  DateTime?
+  favoritefonts        favoritefonts[]
 }

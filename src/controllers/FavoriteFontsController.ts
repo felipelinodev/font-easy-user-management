@@ -12,6 +12,7 @@ async function fontsControllerCreate(req: Request, res: Response){
 
     const userId = (req as any).user.userId
 
+    console.log(userId)
     await favoriteFontsCreate({
         ...font.data,
         user_id: userId

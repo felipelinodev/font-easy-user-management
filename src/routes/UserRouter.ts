@@ -2,6 +2,7 @@ import express from "express";
 import { userControllerCreate, userControllerDelete, userControllerLogin, userControllerProfile, userControllerUpdate, userGoogleControllerCreate, userGoogleControllerLogin } from "../controllers/UserController";
 import { authMiddleware } from "../midderares/authMiddleware";
 import { favoriteFontsControllerDelete, fontsControllerCreate, getAllFavoriteFontsController } from "../controllers/FavoriteFontsController";
+import { forgotPasswordController, resetPasswordController } from "../controllers/PasswordResetController";
 
 const router = express.Router();
 
@@ -26,6 +27,10 @@ router.post('/favoritefonts', authMiddleware, fontsControllerCreate);
 router.get('/favoritefonts', authMiddleware, getAllFavoriteFontsController);
 
 router.delete('/favoritefonts/:id', authMiddleware, favoriteFontsControllerDelete)
+
+router.post('/auth/forgot-password', forgotPasswordController);
+
+router.post('/auth/reset-password', resetPasswordController);
 
 
 export default router;
