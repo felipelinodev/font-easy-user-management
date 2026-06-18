@@ -11,7 +11,7 @@ const origin = process.env.FRONTEND_URL ? process.env.FRONTEND_URL : true;
 app.use(express.json());
 app.use(cookieParser())
 app.use(cors({
-  origin: origin,
+  origin: true,
   credentials: true,
 }))
 
